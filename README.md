@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mosaic
+
+**Mosaic** is a web application for organizing and capturing group memories. It turns collaborative photo uploads and event scheduling into a shared digital space that can be viewed as an interactive mosaic.
+
+## Overview
+
+Created for the **entertainment** theme, this project focuses on helping friends preserve and relive group moments. Whether it's a concert, road trip, club event, or casual gathering, users can contribute media, plan meetups, and react to events in one central place.
+
+## Features
+
+- **Mosaic Viewer**: Displays uploaded images in a dynamic, zoomable layout with export functionality.
+- **Event Scheduling**: Users can create events tied to a group wall and collect RSVP-style responses ("yes", "maybe", "no").
+- **Member Directory**: Displays a list of users in the wall, with optional future support for permissions or messaging.
+- **Wall Dashboard**: Switch between memory viewer, shared events, and member views.
+- **Invite Links and Codes**: Shareable URLs or codes for adding others to a memory wall.
+- **Realtime Sync**: Photos, events, and responses update live across all users.
+
+## Tech Stack
+
+- Next.js (App Router)
+- Supabase (PostgreSQL, Auth, Realtime)
+- React and TypeScript
+- Tailwind CSS
+- TypeScript
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository.
+2. Set up environment variables for Supabase (URL and anon/public key).
+  - ``NEXT_PUBLIC_SUPABASE_URL``
+- ``NEXT_PUBLIC_SUPABASE_ANON_KEY``
+4. Install dependencies and run the development server.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
