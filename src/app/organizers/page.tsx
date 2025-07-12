@@ -36,16 +36,6 @@ export default function ForOrganizersPage() {
 
                     <div className="p-4 border border-gray-200 rounded-md">
                         <h2 className="text-lg font-semibold text-gray-800 mb-2">
-                            Moderation Tools
-                        </h2>
-                        <p className="text-sm text-gray-600">
-                            Stay in control with tools to approve, remove, or
-                            reorder content before it goes live.
-                        </p>
-                    </div>
-
-                    <div className="p-4 border border-gray-200 rounded-md">
-                        <h2 className="text-lg font-semibold text-gray-800 mb-2">
                             Download & Archive
                         </h2>
                         <p className="text-sm text-gray-600">

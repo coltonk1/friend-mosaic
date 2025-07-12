@@ -5,12 +5,13 @@ import { supabase } from "@/utils/supabase/client";
 import { v4 as uuidv4 } from "uuid";
 import { useRef } from "react";
 import html2canvas from "html2canvas";
-import Mosaic from "@/components/mosaic";
-import ListView from "@/components/listview";
 import { useRequireAuth } from "@/utils/requireAuth";
 import WallSidebar from "@/components/wallsidebar";
 import { useParams, useRouter } from "next/navigation";
 import { joinWall } from "@/utils/walls/join";
+import ViewerSection from "@/components/TileViewer";
+import SharedEvents from "@/components/SharedEvents";
+import Members from "@/components/Members";
 
 function getVideoFirstFrame(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -44,11 +45,56 @@ function getVideoFirstFrame(file: File): Promise<string> {
 }
 
 export default function Wall() {
+    useEffect(() => {
+        const originalMaxHeight = document.body.style.maxHeight;
+        const originalOverflow = document.body.style.overflow;
+
+        document.body.style.maxHeight = "100vh";
+        document.body.style.overflow = "hidden";
+
+        return () => {
+            document.body.style.maxHeight = originalMaxHeight;
+            document.body.style.overflow = originalOverflow;
+        };
+    }, []);
+
     useRequireAuth();
 
     const router = useRouter();
     const params = useParams();
     const wallId = params.wallId as string;
+
+    useEffect(() => {
+        if (!wallId) return;
+
+        async function ensureName() {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+            if (!user) return;
+            if (!wallId) return;
+
+            const { data: member } = await supabase
+                .from("wall_members")
+                .select("name")
+                .eq("user_id", user.id)
+                .eq("wall_id", wallId)
+                .single();
+
+            if (!member?.name) {
+                const name = prompt("Enter your name to join this wall");
+                if (name?.trim()) {
+                    await supabase
+                        .from("wall_members")
+                        .update({ name: name.trim() })
+                        .eq("user_id", user.id)
+                        .eq("wall_id", wallId);
+                }
+            }
+        }
+
+        ensureName();
+    }, [wallId]);
 
     const [tiles, setTiles] = useState<PositionedTile[]>([]);
     const [textContent, setTextContent] = useState("");
@@ -58,6 +104,8 @@ export default function Wall() {
     const [loading, setLoading] = useState(true);
     const [wallInfo, setWallInfo] = useState<Wall | null>(null);
     const mosaicRef = useRef<HTMLDivElement>(null);
+
+    const [currentPageState, setCurrentPageState] = useState("viewer");
 
     type Wall = {
         title: string;
@@ -83,6 +131,8 @@ export default function Wall() {
     }, [wallId]);
 
     async function checkMembership() {
+        if (!userUid) return;
+
         const { data: wall, error } = await supabase
             .from("walls")
             .select("id")
@@ -117,7 +167,7 @@ export default function Wall() {
         const { data, error } = await supabase
             .from("walls")
             .select("title, description, code, link_code, id")
-            .limit(1)
+            .eq("id", wallId)
             .single();
 
         if (error) {
@@ -307,57 +357,7 @@ export default function Wall() {
     const [showForm, setShowForm] = useState(false);
 
     return (
-        <div className="relative mx-auto">
-            <div
-                className="w-full bg-white border-gray-200 px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 h-15 border-b sticky top-17.5 z-10 mx-auto"
-                style={{
-                    boxShadow: "0 0 10px 5px #0001",
-                }}
-            >
-                {/* Left: Download + Note */}
-                {viewMode === "mosaic" && (
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                        <button
-                            onClick={handleExportImage}
-                            className="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm px-5 py-2 rounded-lg transition"
-                        >
-                            Download Mosaic
-                        </button>
-
-                        <div className="flex items-start space-x-2 bg-blue-50 text-blue-800 text-sm px-3 py-2 rounded-md border border-blue-200">
-                            <svg
-                                className="w-4 h-4 mt-0.5 flex-shrink-0"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M13 16h-1v-4h-1m1-4h.01M12 18.5A6.5 6.5 0 1118.5 12 6.5 6.5 0 0112 18.5z"
-                                />
-                            </svg>
-                            <span>
-                                Zooming in more will result in higher quality
-                                downloads.
-                            </span>
-                        </div>
-                    </div>
-                )}
-
-                {/* Right: View toggle */}
-                <div className="flex justify-end mr-0 ml-auto">
-                    <button
-                        onClick={toggleViewMode}
-                        className="text-sm text-blue-600 hover:underline"
-                    >
-                        Switch to {viewMode === "mosaic" ? "List" : "Mosaic"}{" "}
-                        View
-                    </button>
-                </div>
-            </div>
-
+        <div className="relative mx-auto flex-1 flex flex-col w-full">
             {/* Floating Button */}
             {!showForm && (
                 <button
@@ -419,52 +419,43 @@ export default function Wall() {
                 </div>
             )}
 
-            {wallInfo &&
-                wallInfo.title &&
-                wallInfo.link_code &&
-                wallInfo.code && (
-                    <WallSidebar
-                        wallInfo={{
-                            title: wallInfo.title,
-                            description: wallInfo?.description,
-                            link_code: wallInfo.link_code,
-                            code: wallInfo.code,
-                            id: wallInfo.id,
-                        }}
-                    />
-                )}
+            <div className="flex-1 flex">
+                {wallInfo &&
+                    wallInfo.title &&
+                    wallInfo.link_code &&
+                    wallInfo.code && (
+                        <WallSidebar
+                            wallInfo={{
+                                title: wallInfo.title,
+                                description: wallInfo?.description,
+                                link_code: wallInfo.link_code,
+                                code: wallInfo.code,
+                                id: wallInfo.id,
+                            }}
+                            changePageState={(state: string) => {
+                                setCurrentPageState(state);
+                            }}
+                        />
+                    )}
 
-            {/* Mosaic/List Section */}
-            <div className="border-zinc-300 border-t border-b object-contain overflow-hidden">
-                {loading ? (
-                    <div className="flex items-center justify-center py-10 space-x-2 text-sm text-gray-600">
-                        <svg
-                            className="w-5 h-5 animate-spin text-blue-600"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                            />
-                            <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                            />
-                        </svg>
-                        <span>Loading...</span>
-                    </div>
-                ) : viewMode === "mosaic" ? (
-                    <Mosaic tiles={tiles} refObject={mosaicRef} />
-                ) : (
-                    <ListView tiles={tiles} />
-                )}
+                {currentPageState === "viewer" ? (
+                    <ViewerSection
+                        loading={loading}
+                        viewMode={viewMode}
+                        toggleViewMode={toggleViewMode}
+                        handleExportImage={handleExportImage}
+                        tiles={tiles}
+                        mosaicRef={mosaicRef}
+                    />
+                ) : currentPageState === "events" ? (
+                    wallInfo ? (
+                        <SharedEvents wallId={wallInfo.id} />
+                    ) : null
+                ) : currentPageState === "members" ? (
+                    wallInfo ? (
+                        <Members wallId={wallInfo.id} />
+                    ) : null
+                ) : null}
             </div>
         </div>
     );

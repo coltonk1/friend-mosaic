@@ -25,7 +25,7 @@ type MosaicProps = {
 export default function Mosaic({ tiles, refObject }: MosaicProps) {
     return (
         <>
-            <div className="cursor-grab">
+            <div className="cursor-grab flex-1 flex flex-col">
                 <TransformWrapper
                     initialScale={1}
                     minScale={0.1}
@@ -36,9 +36,9 @@ export default function Mosaic({ tiles, refObject }: MosaicProps) {
                     doubleClick={{ disabled: true }}
                     pinch={{ step: 0.1 }}
                 >
-                    <TransformComponent>
+                    <TransformComponent wrapperClass="!w-full flex-1">
                         <div
-                            className="grid gap-2"
+                            className="grid gap-2 w-full"
                             ref={refObject}
                             style={{
                                 gridTemplateColumns:

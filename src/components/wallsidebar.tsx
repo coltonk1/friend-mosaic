@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useParams } from "next/navigation";
+import { SetStateAction, useState } from "react";
 import QRCode from "react-qr-code"; // You must install: npm i react-qr-code
 
 export default function WallSidebar({
     wallInfo,
+    changePageState,
 }: {
     wallInfo: {
         title: string;
@@ -11,17 +13,22 @@ export default function WallSidebar({
         code: string;
         id: string;
     };
+    changePageState: (state: string) => void;
 }) {
     const [showShare, setShowShare] = useState(false);
+    const params = useParams();
+    const wallId = params.wallId as string;
 
     const shareUrl = `${window.location.origin}/walls/${wallInfo.id}/join/${
         wallInfo.link_code || ""
     }`;
     const joinCode = wallInfo.code;
+    const demoWallId = "49930abc-43cf-46a9-9ef9-28e8cf0d0086";
+    const isDemo = wallId === demoWallId;
 
     return (
         <div
-            className="fixed top-32.5 h-full z-5 bg-white border-r border-zinc-200 px-10 py-8 w-72 space-y-6"
+            className=" z-5 bg-white border-r border-zinc-200 px-10 py-8 w-72 space-y-6"
             style={{
                 boxShadow: "0 0 10px 5px #0001",
             }}
@@ -72,23 +79,44 @@ export default function WallSidebar({
 
             <div className="pt-6 space-y-3">
                 <button
-                    disabled
-                    className="w-full bg-gray-100 text-gray-400 text-sm py-2 rounded-md cursor-not-allowed"
+                    onClick={() => changePageState("viewer")}
+                    className={`w-full text-sm py-2 rounded-md transition  bg-gray-200 text-gray-800 hover:bg-gray-300 cursor-pointer`}
+                >
+                    Memory Viewer
+                </button>
+                <button
+                    disabled={isDemo}
+                    onClick={() => changePageState("events")}
+                    className={`w-full text-sm py-2 rounded-md transition  ${
+                        isDemo
+                            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                            : "bg-gray-200 text-gray-800 hover:bg-gray-300 cursor-pointer"
+                    }`}
                 >
                     Shared Events
                 </button>
                 <button
-                    disabled
-                    className="w-full bg-gray-100 text-gray-400 text-sm py-2 rounded-md cursor-not-allowed"
+                    disabled={isDemo}
+                    onClick={() => changePageState("members")}
+                    className={`w-full text-sm py-2 rounded-md transition ${
+                        isDemo
+                            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                            : "bg-gray-200 text-gray-800 hover:bg-gray-300 cursor-pointer"
+                    }`}
                 >
                     Members
                 </button>
-                <button
-                    disabled
-                    className="w-full bg-gray-100 text-gray-400 text-sm py-2 rounded-md cursor-not-allowed"
+                {/* <button
+                    disabled={isDemo}
+                    onClick={() => changePageState("availability")}
+                    className={`w-full text-sm py-2 rounded-md transition  ${
+                        isDemo
+                            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                            : "bg-gray-200 text-gray-800 hover:bg-gray-300 cursor-pointer"
+                    }`}
                 >
                     Availability
-                </button>
+                </button> */}
             </div>
         </div>
     );

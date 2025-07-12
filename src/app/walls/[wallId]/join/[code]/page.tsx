@@ -18,21 +18,21 @@ export default function AutoJoinPage() {
             console.log(wallId, code);
             if (!wallId || !code) return;
 
-            const { data, error } = await supabase
-                .from("walls")
-                .select("code, link_code")
-                .eq("id", wallId)
-                .single();
+            // const { data, error } = await supabase
+            //     .from("walls")
+            //     .select("code, link_code")
+            //     .eq("id", wallId)
+            //     .single();
 
-            if (error || !data) {
-                setError("Invalid wall ID.");
-                return;
-            }
+            // if (error || !data) {
+            //     setError("Invalid wall ID.");
+            //     return;
+            // }
 
-            if (data.code !== code && data.link_code !== code) {
-                setError("Invalid join code.");
-                return;
-            }
+            // if (data.code !== code && data.link_code !== code) {
+            //     setError("Invalid join code.");
+            //     return;
+            // }
 
             const {
                 data: { user },
@@ -44,8 +44,12 @@ export default function AutoJoinPage() {
             }
 
             console.log(result);
+            if (!result) {
+                console.warn("ERROR JOINING WALL");
+                return;
+            }
 
-            router.push(`/wall/${wallId}`);
+            router.push(`/walls/${wallId}`);
         }
         console.log("YO");
         verifyAndJoin();

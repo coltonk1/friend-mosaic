@@ -8,7 +8,7 @@ import Link from "next/link";
 
 const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Demo Wall", href: "/test-wall" },
+    { name: "Demo Wall", href: "/walls/49930abc-43cf-46a9-9ef9-28e8cf0d0086" },
     { name: "For Organizers", href: "/organizers" },
 ];
 
