@@ -130,7 +130,7 @@ export default function Wall() {
         checkMembership();
         fetchTiles();
         fetchWallInfo();
-    }, [wallId, numCols, checkMembership, fetchTiles, fetchWallInfo]);
+    }, [wallId, numCols]);
 
     async function checkMembership() {
         if (!userUid) return;
@@ -206,7 +206,7 @@ export default function Wall() {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [wallId, checkMembership, fetchTiles, fetchWallInfo]);
+    }, [wallId, numCols]);
 
     async function fetchTiles() {
         const { data, error } = await supabase
