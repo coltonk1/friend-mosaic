@@ -33,7 +33,7 @@ export default function ForOrganizersPage() {
                         </h2>
                         <p className="text-sm text-gray-600">
                             Attendees can upload photos, videos, and notes
-                            directly from their device — no account needed.
+                            directly from their device. No account needed.
                         </p>
                     </div>
 
