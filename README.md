@@ -29,6 +29,7 @@ Created for the **entertainment** theme, this project focuses on helping friends
 2. Set up environment variables for Supabase (URL and anon/public key).
   - ``NEXT_PUBLIC_SUPABASE_URL``
 - ``NEXT_PUBLIC_SUPABASE_ANON_KEY``
+  3. Set up all the database tables, storage, policies, etc. I'm unsure of how to add that here.
 4. Install dependencies and run the development server.
 
 ```bash
