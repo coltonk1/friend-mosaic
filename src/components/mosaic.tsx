@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import { RefObject, useRef, useState, useEffect } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 
 type Tile = {
@@ -20,12 +20,48 @@ type PositionedTile = Tile & {
 type MosaicProps = {
     tiles: PositionedTile[];
     refObject?: RefObject<HTMLDivElement | null>;
+    numCols: number;
 };
 
-export default function Mosaic({ tiles, refObject }: MosaicProps) {
+export default function Mosaic({ tiles, refObject, numCols = 6 }: MosaicProps) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            const isNowFullscreen = Boolean(document.fullscreenElement);
+            setIsFullscreen(isNowFullscreen);
+        };
+
+        document.addEventListener("fullscreenchange", handleFullscreenChange);
+        return () => {
+            document.removeEventListener(
+                "fullscreenchange",
+                handleFullscreenChange
+            );
+        };
+    }, []);
+
+    const toggleFullscreen = async () => {
+        if (!document.fullscreenElement && containerRef.current) {
+            await containerRef.current.requestFullscreen();
+            setIsFullscreen(true);
+        } else if (document.fullscreenElement) {
+            await document.exitFullscreen();
+            setIsFullscreen(false);
+        }
+    };
+
     return (
-        <>
-            <div className="cursor-grab flex-1 flex flex-col">
+        <div className="relative w-full h-full bg-white " ref={containerRef}>
+            <button
+                onClick={toggleFullscreen}
+                className="absolute top-2 right-2 z-20 border-2  border-[#9170D8] bg-white hover:bg-[#111827] text-sm font-medium text-[#9170D8] hover:border-white/0 hover:text-white px-5 py-2 rounded-lg transition cursor-pointer"
+            >
+                {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+            </button>
+
+            <div className="cursor-grab flex-1 flex flex-col h-full">
                 <TransformWrapper
                     initialScale={1}
                     minScale={0.1}
@@ -36,13 +72,12 @@ export default function Mosaic({ tiles, refObject }: MosaicProps) {
                     doubleClick={{ disabled: true }}
                     pinch={{ step: 0.1 }}
                 >
-                    <TransformComponent wrapperClass="!w-full flex-1">
+                    <TransformComponent wrapperClass="!w-full flex-1 bg-[url('/grid.png')] bg-repeat bg-[length:40px_40px]">
                         <div
                             className="grid gap-2 w-full"
                             ref={refObject}
                             style={{
-                                gridTemplateColumns:
-                                    "repeat(6, minmax(150px, 1fr))",
+                                gridTemplateColumns: `repeat(${numCols}, minmax(150px, 1fr))`,
                                 gridAutoRows: "150px",
                             }}
                         >
@@ -102,8 +137,16 @@ export default function Mosaic({ tiles, refObject }: MosaicProps) {
                                         )}
                                     {tile.text_content &&
                                         tile.type === "text" && (
-                                            <div className="w-full h-full bg-[#fafafa] border-[#e4e4e7] border-2 p-2">
-                                                {tile.text_content}
+                                            <div className="w-full h-full bg-[#fafafa] border-[#e4e4e7] border-2 p-2 ">
+                                                <span
+                                                    className="line-clamp-5"
+                                                    style={{
+                                                        fontSize:
+                                                            16 * tile.rowSpan,
+                                                    }}
+                                                >
+                                                    {tile.text_content}
+                                                </span>
                                             </div>
                                         )}
                                 </div>
@@ -112,6 +155,6 @@ export default function Mosaic({ tiles, refObject }: MosaicProps) {
                     </TransformComponent>
                 </TransformWrapper>
             </div>
-        </>
+        </div>
     );
 }

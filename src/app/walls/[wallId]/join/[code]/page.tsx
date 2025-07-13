@@ -36,6 +36,7 @@ export default function AutoJoinPage() {
 
             const {
                 data: { user },
+                error,
             } = await supabase.auth.getUser();
 
             var result = false;
@@ -46,6 +47,7 @@ export default function AutoJoinPage() {
             console.log(result);
             if (!result) {
                 console.warn("ERROR JOINING WALL");
+                setError("Error joining wall. Check code or retry");
                 return;
             }
 

@@ -5,6 +5,7 @@ import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { joinWall } from "@/utils/walls/join";
+import { useRequireAuth } from "@/utils/requireAuth";
 
 type Wall = {
     id: string;
@@ -14,6 +15,7 @@ type Wall = {
 };
 
 export default function Dashboard() {
+    useRequireAuth();
     const router = useRouter();
     const [walls, setWalls] = useState<Wall[]>([]);
     const [title, setTitle] = useState("");
@@ -82,7 +84,7 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-12">
+        <div className="max-w-6xl w-full mx-auto px-6 py-10 space-y-12">
             <section>
                 <h1 className="text-3xl font-bold mb-6 text-gray-900">
                     Your Walls
@@ -99,7 +101,7 @@ export default function Dashboard() {
                         {walls.map((wall) => (
                             <li
                                 key={wall.id}
-                                className="p-4 border border-gray-200 rounded-xl hover:shadow transition cursor-pointer bg-white"
+                                className="p-4 border border-gray-200 rounded-xl hover:shadow transition cursor-pointer bg-white hover:border-[#ff5851]"
                                 onClick={() => router.push(`/walls/${wall.id}`)}
                             >
                                 <div className="text-lg font-semibold text-gray-800">
@@ -120,13 +122,13 @@ export default function Dashboard() {
                 </h2>
                 <div className="bg-white border border-gray-200 rounded-xl p-6 space-y-4">
                     <input
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#111827] focus:border-[#111827] transition"
                         placeholder="Title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
                     <textarea
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#111827] focus:border-[#111827] min-h-[100px] transition"
                         placeholder="Description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
@@ -135,7 +137,7 @@ export default function Dashboard() {
                     <div className="flex justify-end">
                         <button
                             onClick={createWall}
-                            className="bg-blue-600 text-white text-sm px-5 py-2 rounded-md hover:bg-blue-700 transition"
+                            className="border-2  border-[#9170D8] bg-[#9170D8] hover:bg-[#111827] text-sm font-medium text-white hover:border-white/0 px-5 py-2 rounded-lg transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-full"
                         >
                             Create Wall
                         </button>

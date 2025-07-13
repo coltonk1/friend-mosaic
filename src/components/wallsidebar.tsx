@@ -45,7 +45,7 @@ export default function WallSidebar({
             <div>
                 <button
                     onClick={() => setShowShare((prev) => !prev)}
-                    className="w-full bg-blue-600 text-white text-sm py-2 rounded-md hover:bg-blue-700 transition"
+                    className=" hover:bg-[#111827] text-sm font-medium border-2 border-[#ff5851] text-[#ff5851] hover:text-white hover:border-[#111827] px-5 py-2 rounded-lg transition cursor-pointer w-full"
                 >
                     {showShare ? "Hide Share Options" : "Share"}
                 </button>
@@ -80,17 +80,17 @@ export default function WallSidebar({
             <div className="pt-6 space-y-3">
                 <button
                     onClick={() => changePageState("viewer")}
-                    className={`w-full text-sm py-2 rounded-md transition  bg-gray-200 text-gray-800 hover:bg-gray-300 cursor-pointer`}
+                    className={`hover:bg-[#111827] text-sm font-medium bg-[#ff5851] text-white px-5 py-2 rounded-3xl transition cursor-pointer w-full`}
                 >
                     Memory Viewer
                 </button>
                 <button
                     disabled={isDemo}
                     onClick={() => changePageState("events")}
-                    className={`w-full text-sm py-2 rounded-md transition  ${
+                    className={`hover:bg-[#111827] text-sm font-medium bg-[#ff5851] text-white px-5 py-2 rounded-3xl transition cursor-pointer w-full  ${
                         isDemo
-                            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                            : "bg-gray-200 text-gray-800 hover:bg-gray-300 cursor-pointer"
+                            ? "!bg-gray-100 !text-gray-400 !cursor-not-allowed"
+                            : ""
                     }`}
                 >
                     Shared Events
@@ -98,10 +98,10 @@ export default function WallSidebar({
                 <button
                     disabled={isDemo}
                     onClick={() => changePageState("members")}
-                    className={`w-full text-sm py-2 rounded-md transition ${
+                    className={`hover:bg-[#111827] text-sm font-medium bg-[#ff5851] text-white px-5 py-2 rounded-3xl transition cursor-pointer w-full  ${
                         isDemo
-                            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                            : "bg-gray-200 text-gray-800 hover:bg-gray-300 cursor-pointer"
+                            ? "!bg-gray-100 !text-gray-400 !cursor-not-allowed"
+                            : ""
                     }`}
                 >
                     Members

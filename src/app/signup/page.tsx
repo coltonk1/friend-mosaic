@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase/client";
+import Link from "next/link";
 
 export default function SignupPage() {
     const router = useRouter();
@@ -39,17 +40,23 @@ export default function SignupPage() {
 
         if (error) {
             setError(error.message);
+            return;
         } else {
-            router.push("/wall");
+            router.push("/login");
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-            <div className="w-full max-w-sm bg-white rounded-xl shadow p-6 space-y-5">
-                <h1 className="text-xl font-semibold text-gray-800 text-center">
-                    Create an Account
-                </h1>
+        <div className="min-h-screen flex items-center justify-center px-4">
+            <div className="w-full max-w-2xl bg-white rounded-xl p-6 space-y-5">
+                <div>
+                    <h1 className="text-2xl font-semibold text-gray-800">
+                        Create Your Account
+                    </h1>
+                    <p className="opacity-50 text-sm mt-0">
+                        Sign up to start saving your memories.
+                    </p>
+                </div>
 
                 <div className="space-y-3">
                     <div>
@@ -60,9 +67,8 @@ export default function SignupPage() {
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#111827] focus:border-[#111827] transition"
                             placeholder="you@example.com"
-                            required
                         />
                     </div>
 
@@ -74,9 +80,8 @@ export default function SignupPage() {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#111827] focus:border-[#111827] transition"
                             placeholder="••••••••"
-                            required
                         />
                     </div>
 
@@ -88,9 +93,8 @@ export default function SignupPage() {
                             type="password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#111827] focus:border-[#111827] transition"
                             placeholder="••••••••"
-                            required
                         />
                     </div>
 
@@ -99,7 +103,7 @@ export default function SignupPage() {
                     <button
                         onClick={handleSignup}
                         disabled={loading}
-                        className="w-full bg-black text-white py-2 rounded text-sm hover:bg-zinc-800 transition disabled:opacity-50"
+                        className="border-2 mt-12 border-[#9170D8] bg-[#9170D8] hover:bg-[#111827] text-sm font-medium text-white hover:border-white/0 px-5 py-2 rounded-lg transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-full"
                     >
                         {loading ? "Signing up..." : "Sign Up"}
                     </button>
@@ -107,9 +111,12 @@ export default function SignupPage() {
 
                 <p className="text-center text-sm text-gray-600">
                     Already have an account?{" "}
-                    <a href="/login" className="text-blue-600 hover:underline">
+                    <Link
+                        href="/login"
+                        className="text-[#ff5851] hover:underline transition hover:text-[#111827]"
+                    >
                         Log in
-                    </a>
+                    </Link>
                 </p>
             </div>
         </div>

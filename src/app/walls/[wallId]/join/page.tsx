@@ -36,14 +36,14 @@ export default function JoinWallPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-            <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow space-y-4">
+        <div className="min-h-screen flex items-center justify-center px-4">
+            <div className="w-full max-w-sm bg-white p-6 rounded-lg space-y-4">
                 <h1 className="text-lg font-semibold text-center">
                     Enter Join Code
                 </h1>
                 <input
                     type="text"
-                    className="w-full border px-3 py-2 rounded text-sm"
+                    className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#111827] focus:border-[#111827] transition"
                     placeholder="Enter code"
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
@@ -52,7 +52,7 @@ export default function JoinWallPage() {
                 <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition text-sm"
+                    className="border-2  border-[#9170D8] bg-[#9170D8] hover:bg-[#111827] text-sm font-medium text-white hover:border-white/0 px-5 py-2 rounded-lg transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-full"
                 >
                     {loading ? "Joining..." : "Join Wall"}
                 </button>

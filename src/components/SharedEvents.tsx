@@ -225,18 +225,18 @@ export default function SharedEvents({ wallId }: SharedEventsProps) {
                     </h2>
                     <button
                         onClick={() => setCreating(!creating)}
-                        className="text-sm font-medium text-blue-600 hover:underline"
+                        className="text-sm text-[#9170D8] transition cursor-pointer hover:underline hover:text-[#111827] z-20"
                     >
                         {creating ? "Cancel" : "+ New Event"}
                     </button>
                 </div>
 
                 {creating && (
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 space-y-4">
+                    <div className="bg-white border border-gray-200 rounded-xl p-6 space-y-4">
                         <input
                             type="text"
                             placeholder="Event name"
-                            className="w-full border border-gray-300 px-3 py-2 text-sm rounded"
+                            className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#111827] focus:border-[#111827] transition"
                             value={form.name}
                             onChange={(e) =>
                                 setForm({ ...form, name: e.target.value })
@@ -244,7 +244,7 @@ export default function SharedEvents({ wallId }: SharedEventsProps) {
                         />
                         <textarea
                             placeholder="Event description"
-                            className="w-full border border-gray-300 px-3 py-2 text-sm rounded"
+                            className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#111827] focus:border-[#111827] min-h-[100px] transition"
                             value={form.description}
                             onChange={(e) =>
                                 setForm({
@@ -256,7 +256,7 @@ export default function SharedEvents({ wallId }: SharedEventsProps) {
                         <div className="flex flex-col sm:flex-row gap-4">
                             <input
                                 type="datetime-local"
-                                className="flex-1 border border-gray-300 px-3 py-2 text-sm rounded"
+                                className="flex-1 border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#111827] focus:border-[#111827] transition"
                                 value={form.starts_at}
                                 onChange={(e) =>
                                     setForm({
@@ -267,7 +267,7 @@ export default function SharedEvents({ wallId }: SharedEventsProps) {
                             />
                             <input
                                 type="datetime-local"
-                                className="flex-1 border border-gray-300 px-3 py-2 text-sm rounded"
+                                className="flex-1 border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#111827] focus:border-[#111827] transition"
                                 value={form.ends_at}
                                 onChange={(e) =>
                                     setForm({
@@ -279,7 +279,7 @@ export default function SharedEvents({ wallId }: SharedEventsProps) {
                         </div>
                         <button
                             onClick={createEvent}
-                            className="bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded hover:bg-blue-700 transition"
+                            className="border-2  border-[#9170D8] bg-[#9170D8] hover:bg-[#111827] text-sm font-medium text-white hover:border-white/0 px-5 py-2 rounded-lg transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-full"
                         >
                             Create Event
                         </button>
@@ -328,7 +328,7 @@ export default function SharedEvents({ wallId }: SharedEventsProps) {
         px-4 py-1.5 text-sm font-medium rounded-md border transition-colors duration-150
         ${
             isSelected
-                ? "bg-blue-600 text-white border-blue-600"
+                ? "bg-[#9170D8] text-white border-[#9170D8]"
                 : "bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200"
         }
         ${isPast ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}

@@ -36,53 +36,53 @@ export default function Header() {
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
-        router.refresh(); // or router.push("/") if you want redirect
+        router.refresh();
     };
 
     return (
         <header className="w-full bg-white shadow-sm z-40 sticky top-0">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-                <a
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+                <Link
                     href="/"
                     className="text-xl font-bold text-gray-800 tracking-tight"
                 >
-                    Friend Mosaic
-                </a>
+                    <img src="/logo_mosaic.webp" className="h-10 w-auto"></img>
+                </Link>
 
                 <nav className="hidden md:flex space-x-6 items-center">
                     {navLinks.map((link) => (
-                        <a
+                        <Link
                             key={link.name}
                             href={link.href}
-                            className="text-sm text-gray-600 hover:text-blue-600 transition"
+                            className="text-sm text-[#111827] text-medium hover:text-[#ff5851] transition"
                         >
                             {link.name}
-                        </a>
+                        </Link>
                     ))}
 
-                    <div className="hidden md:flex">
+                    <div className="hidden md:flex items-center gap-5">
                         {isLoggedIn ? (
                             <>
-                                <a
+                                <Link
                                     href="/dashboard"
-                                    className="text-sm px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                                    className="transition text-white rounded-3xl text-medium px-4 text-sm h-fit py-1.5 bg-[#ff5851] hover:bg-[#111827]"
                                 >
                                     Dashboard
-                                </a>
+                                </Link>
                                 <button
                                     onClick={handleLogout}
-                                    className="ml-2 text-sm px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-100 transition"
+                                    className="transition text-[#ff5851] text-medium rounded-3xl px-4 text-sm h-fit border border-[#ff5851] py-1.5  hover:bg-red-500 hover:text-white cursor-pointer"
                                 >
                                     Log Out
                                 </button>
                             </>
                         ) : (
-                            <a
+                            <Link
                                 href="/login"
-                                className="text-sm px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                                className="transition text-white rounded-3xl px-4 text-sm py-1.5 h-fit bg-[#ff5851] hover:bg-[#111827]"
                             >
                                 Log In
-                            </a>
+                            </Link>
                         )}
                     </div>
                 </nav>
@@ -102,23 +102,23 @@ export default function Header() {
             {mobileOpen && (
                 <div className="md:hidden bg-white border-t border-gray-200 px-4 py-3 space-y-2">
                     {navLinks.map((link) => (
-                        <a
+                        <Link
                             key={link.name}
                             href={link.href}
                             className="block text-sm text-gray-700 hover:text-blue-600 transition"
                         >
                             {link.name}
-                        </a>
+                        </Link>
                     ))}
 
                     {isLoggedIn ? (
                         <>
-                            <a
+                            <Link
                                 href="/dashboard"
                                 className="block text-sm text-blue-600 hover:underline"
                             >
                                 Dashboard
-                            </a>
+                            </Link>
                             <button
                                 onClick={handleLogout}
                                 className="block text-sm text-red-600 hover:underline"

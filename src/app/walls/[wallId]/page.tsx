@@ -107,6 +107,8 @@ export default function Wall() {
 
     const [currentPageState, setCurrentPageState] = useState("viewer");
 
+    const [numCols, setNumCols] = useState(12);
+
     type Wall = {
         title: string;
         description: string;
@@ -128,7 +130,7 @@ export default function Wall() {
         checkMembership();
         fetchTiles();
         fetchWallInfo();
-    }, [wallId]);
+    }, [wallId, numCols]);
 
     async function checkMembership() {
         if (!userUid) return;
@@ -217,8 +219,10 @@ export default function Wall() {
         if (error) return console.error(error);
         if (!data) return;
 
-        const positioned = assignTileSpans(data);
+        const positioned = assignTileSpans(data, numCols);
         setTiles(positioned);
+        const approxCols = Math.ceil(Math.sqrt(positioned.length) * 1.33);
+        if (numCols !== approxCols) setNumCols(approxCols);
         setLoading(false);
         console.log("Done loading");
     }
@@ -362,7 +366,7 @@ export default function Wall() {
             {!showForm && (
                 <button
                     onClick={() => setShowForm(true)}
-                    className="fixed bottom-6 right-6 z-20 bg-blue-600 text-white px-4 py-3 rounded-full shadow-lg hover:bg-blue-700 transition"
+                    className="fixed bottom-6 right-6 z-20 border-2  border-[#9170D8] bg-[#9170D8] hover:bg-[#111827] text-sm font-medium text-white hover:border-white/0 px-5 py-2 rounded-lg transition cursor-pointer"
                 >
                     + Add Memory
                 </button>
@@ -379,7 +383,7 @@ export default function Wall() {
                             </h2>
                             <button
                                 onClick={() => setShowForm(false)}
-                                className="text-gray-500 hover:text-gray-700 text-xl font-bold"
+                                className="text-gray-500 hover:text-gray-700 text-xl font-bold cursor-pointer p-1"
                             >
                                 &times;
                             </button>
@@ -390,7 +394,7 @@ export default function Wall() {
                             placeholder="Write a memory..."
                             value={textContent}
                             onChange={(e) => setTextContent(e.target.value)}
-                            className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[100px]"
+                            className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#111827] focus:border-[#111827] min-h-[100px] transition"
                         />
 
                         {/* File Input */}
@@ -402,7 +406,7 @@ export default function Wall() {
                                 const selected = e.target.files;
                                 if (selected) setFiles([...selected]);
                             }}
-                            className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+                            className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:cursor-pointer file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer"
                         />
 
                         {/* Action Buttons */}
@@ -410,7 +414,7 @@ export default function Wall() {
                             <button
                                 onClick={handleUpload}
                                 disabled={uploading}
-                                className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-5 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="border-2  border-[#9170D8] bg-[#9170D8] hover:bg-[#111827] text-sm font-medium text-white hover:border-white/0 px-5 py-2 rounded-lg transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-full"
                             >
                                 {uploading ? "Uploading..." : "Add to Wall"}
                             </button>
@@ -446,6 +450,7 @@ export default function Wall() {
                         handleExportImage={handleExportImage}
                         tiles={tiles}
                         mosaicRef={mosaicRef}
+                        numCols={numCols}
                     />
                 ) : currentPageState === "events" ? (
                     wallInfo ? (
@@ -492,86 +497,95 @@ export default function Wall() {
 
     function assignTileSpans(
         tiles: Tile[],
-        numCols = 6,
-        maxRows = 100
+        numCols: number = 12
     ): PositionedTile[] {
-        const grid: boolean[][] = Array.from({ length: maxRows }, () =>
-            Array(numCols).fill(false)
-        );
+        const fullSpanOptions: [number, number][] = [
+            [2, 2],
+            [2, 1],
+            [1, 2],
+            [1, 1],
+        ];
 
+        const columnHeights = Array(numCols).fill(0);
         const positioned: PositionedTile[] = [];
 
-        const spanOptions: [number, number][] = [];
-        for (let w = 1; w <= Math.min(3, numCols); w++) {
-            for (let h = 1; h <= 3; h++) {
-                spanOptions.push([w, h]);
-            }
-        }
+        let tileIndex = 0;
+        const totalTiles = tiles.length;
 
-        let seed = 0;
-
-        for (const tile of tiles) {
+        while (tileIndex < totalTiles) {
+            const tile = tiles[tileIndex];
             let placed = false;
-            const randomizedSpans = shuffle(spanOptions, ++seed * 12345);
 
-            for (let row = 0; row < maxRows; row++) {
-                for (let col = 0; col < numCols; col++) {
-                    for (const [spanX, spanY] of randomizedSpans) {
-                        if (col + spanX > numCols) continue;
+            const minY = Math.min(...columnHeights);
+            const seed = (tileIndex + 1) * 9973;
+            const offset = Math.floor(
+                seededRandom(seed) * fullSpanOptions.length
+            );
 
-                        if (canPlace(row, col, spanX, spanY)) {
-                            occupy(row, col, spanX, spanY);
-                            positioned.push({
-                                ...tile,
-                                x: col,
-                                y: row,
-                                colSpan: spanX,
-                                rowSpan: spanY,
-                                file_width: spanX,
-                                file_height: spanY,
-                            });
-                            placed = true;
-                            break;
+            const spanOptions = [
+                ...fullSpanOptions.slice(offset),
+                ...fullSpanOptions.slice(0, offset),
+            ];
+
+            for (let col = 0; col < numCols; col++) {
+                for (const [originalW, spanH] of spanOptions) {
+                    const spanW = col + originalW > numCols ? 1 : originalW;
+
+                    const slice = columnHeights.slice(col, col + spanW);
+                    const maxSliceY = Math.max(...slice);
+                    const allSameHeight = slice.every((h) => h === slice[0]);
+
+                    const allowedSpanW = allSameHeight ? originalW : 1;
+
+                    if (col + allowedSpanW > numCols) continue;
+
+                    const adjustedSlice = columnHeights.slice(
+                        col,
+                        col + allowedSpanW
+                    );
+                    const adjustedY = Math.max(...adjustedSlice);
+
+                    if (adjustedY === minY) {
+                        positioned.push({
+                            ...tile,
+                            x: col,
+                            y: adjustedY,
+                            colSpan: allowedSpanW,
+                            rowSpan: spanH,
+                            file_width: allowedSpanW,
+                            file_height: spanH,
+                        });
+
+                        for (let i = col; i < col + allowedSpanW; i++) {
+                            columnHeights[i] = adjustedY + spanH;
                         }
+
+                        tileIndex++;
+                        placed = true;
+                        break;
                     }
-                    if (placed) break;
                 }
                 if (placed) break;
             }
 
+            // Fallback to 1x1 at lowest column if nothing fits
             if (!placed) {
-                console.warn("Could not place tile", tile);
+                const minCol = columnHeights.indexOf(minY);
+                positioned.push({
+                    ...tile,
+                    x: minCol,
+                    y: minY,
+                    colSpan: 1,
+                    rowSpan: 1,
+                    file_width: 1,
+                    file_height: 1,
+                });
+
+                columnHeights[minCol] += 1;
+                tileIndex++;
             }
         }
 
         return positioned;
-
-        function canPlace(
-            row: number,
-            col: number,
-            spanX: number,
-            spanY: number
-        ) {
-            if (col + spanX > numCols || row + spanY > maxRows) return false;
-            for (let r = row; r < row + spanY; r++) {
-                for (let c = col; c < col + spanX; c++) {
-                    if (grid[r][c]) return false;
-                }
-            }
-            return true;
-        }
-
-        function occupy(
-            row: number,
-            col: number,
-            spanX: number,
-            spanY: number
-        ) {
-            for (let r = row; r < row + spanY; r++) {
-                for (let c = col; c < col + spanX; c++) {
-                    grid[r][c] = true;
-                }
-            }
-        }
     }
 }
