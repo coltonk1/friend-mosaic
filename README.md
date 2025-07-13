@@ -19,7 +19,7 @@ Created for the **entertainment** theme, this project focuses on helping friends
 
 - Next.js (App Router)
 - Supabase (PostgreSQL, Auth, Realtime)
-- React and TypeScript
+- React
 - Tailwind CSS
 - TypeScript
 
