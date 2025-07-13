@@ -1,5 +1,5 @@
 import { useParams } from "next/navigation";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import QRCode from "react-qr-code"; // You must install: npm i react-qr-code
 
 export default function WallSidebar({
@@ -22,7 +22,6 @@ export default function WallSidebar({
     const shareUrl = `${window.location.origin}/walls/${wallInfo.id}/join/${
         wallInfo.link_code || ""
     }`;
-    const joinCode = wallInfo.code;
     const demoWallId = "49930abc-43cf-46a9-9ef9-28e8cf0d0086";
     const isDemo = wallId === demoWallId;
 

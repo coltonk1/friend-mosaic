@@ -81,7 +81,7 @@ export default function HomePage() {
             <section className="bg-[#111827] text-white py-16">
                 <div className="max-w-4xl mx-auto text-center space-y-6 px-6">
                     <h2 className="text-3xl sm:text-4xl font-bold">
-                        Ready to capture your group's story?
+                        Ready to capture your group&apos;s story?
                     </h2>
                     <p className="text-gray-300 text-base">
                         Mosaic brings all your shared moments into one

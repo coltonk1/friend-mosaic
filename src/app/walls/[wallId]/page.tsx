@@ -130,7 +130,7 @@ export default function Wall() {
         checkMembership();
         fetchTiles();
         fetchWallInfo();
-    }, [wallId, numCols]);
+    }, [wallId, numCols, checkMembership, fetchTiles, fetchWallInfo]);
 
     async function checkMembership() {
         if (!userUid) return;
@@ -206,7 +206,7 @@ export default function Wall() {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [wallId]);
+    }, [wallId, checkMembership, fetchTiles, fetchWallInfo]);
 
     async function fetchTiles() {
         const { data, error } = await supabase
@@ -486,15 +486,6 @@ export default function Wall() {
         return seed / 4294967296;
     }
 
-    function shuffle<T>(array: T[], seed = 2): T[] {
-        const copy = [...array];
-        for (let i = copy.length - 1; i > 0; i--) {
-            const j = Math.floor(seededRandom(seed + i) * (i + 1));
-            [copy[i], copy[j]] = [copy[j], copy[i]];
-        }
-        return copy;
-    }
-
     function assignTileSpans(
         tiles: Tile[],
         numCols: number = 12
@@ -532,7 +523,6 @@ export default function Wall() {
                     const spanW = col + originalW > numCols ? 1 : originalW;
 
                     const slice = columnHeights.slice(col, col + spanW);
-                    const maxSliceY = Math.max(...slice);
                     const allSameHeight = slice.every((h) => h === slice[0]);
 
                     const allowedSpanW = allSameHeight ? originalW : 1;

@@ -24,7 +24,7 @@ export default function SignupPage() {
             }
         };
         getSession();
-    }, []);
+    }, [router]);
 
     const handleSignup = async () => {
         setError(null);

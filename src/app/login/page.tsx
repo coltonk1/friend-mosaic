@@ -22,7 +22,7 @@ export default function LoginPage() {
             }
         };
         getSession();
-    }, []);
+    }, [router]);
 
     const handleLogin = async () => {
         setError("");
@@ -87,7 +87,7 @@ export default function LoginPage() {
                 </div>
 
                 <p className="text-center text-sm text-gray-600">
-                    Don't have an account?{" "}
+                    Don&apos;t have an account?{" "}
                     <Link
                         href="/signup"
                         className="text-[#ff5851] hover:underline transition hover:text-[#111827]"

@@ -46,7 +46,11 @@ export default function Header() {
                     href="/"
                     className="text-xl font-bold text-gray-800 tracking-tight"
                 >
-                    <img src="/logo_mosaic.webp" className="h-10 w-auto"></img>
+                    <img
+                        alt=""
+                        src="/logo_mosaic.webp"
+                        className="h-10 w-auto"
+                    ></img>
                 </Link>
 
                 <nav className="hidden md:flex space-x-6 items-center">

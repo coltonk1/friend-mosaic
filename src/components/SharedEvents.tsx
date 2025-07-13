@@ -71,7 +71,7 @@ export default function SharedEvents({ wallId }: SharedEventsProps) {
             supabase.removeChannel(eventsSub);
             supabase.removeChannel(responsesSub);
         };
-    }, [wallId]);
+    }, [wallId, fetchEvents]);
 
     interface WallMember {
         user_id: string;

@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
-import { joinWall } from "@/utils/walls/join";
 import { useRequireAuth } from "@/utils/requireAuth";
 
 type Wall = {
@@ -46,7 +44,7 @@ export default function Dashboard() {
         if (error) {
             console.error("Error fetching joined walls:", error);
         } else {
-            setWalls(data.map((item: any) => item.walls));
+            setWalls(data.flatMap((item) => item.walls));
         }
         setLoading(false);
     }
@@ -60,6 +58,11 @@ export default function Dashboard() {
             data: { user },
             error: authError,
         } = await supabase.auth.getUser();
+
+        if (authError) {
+            console.warn(authError);
+            return;
+        }
 
         if (!user) return;
         console.log(user.id);

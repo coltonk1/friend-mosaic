@@ -36,10 +36,9 @@ export default function AutoJoinPage() {
 
             const {
                 data: { user },
-                error,
             } = await supabase.auth.getUser();
 
-            var result = false;
+            let result = false;
             if (user) {
                 result = await joinWall(wallId, code);
             }
