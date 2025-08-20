@@ -4,7 +4,10 @@
 
 ## Overview
 
-Created for the **entertainment** theme, this project focuses on helping friends preserve and relive group moments. Whether it's a concert, road trip, club event, or casual gathering, users can contribute media, plan meetups, and react to events in one central place.
+Created for the **entertainment** theme, this project focuses on helping friends preserve and relive group moments. Whether it's a concert, road trip, club event, or casual gathering, users can contribute media, plan meetups, and react to events in one central place.  
+
+This application was built in just **2 days** during a hackathon.
+Live demo: [https://sharedmosaic.com/](https://sharedmosaic.com/)
 
 ## Features
 
